@@ -19,4 +19,5 @@
 - Run `truffle migrate` or `truffle deploy` to deploy the smart contracts.
 - Run `truffle create migration <migration_name>` to create a new migration file.
 - Run `truffle create contract <contract_name>` to create a new contract file.
+- Run `truffle create test <test_name>` to create a new test file.
 - Run `truffle test` to run the tests.
