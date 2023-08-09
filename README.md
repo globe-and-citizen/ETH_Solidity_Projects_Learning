@@ -11,4 +11,12 @@
 ## Testing
 
 - Start Ganache GUI and run `truffle deploy` to test the deployment of the smart contracts.
-*Note: You can also configure `truffle-config.js` according to the Ganache GUI settings.*
+  _Note: You can also configure `truffle-config.js` according to the Ganache GUI settings._
+
+## Usage
+
+- Run `truffle compile` to compile the smart contracts.
+- Run `truffle migrate` or `truffle deploy` to deploy the smart contracts.
+- Run `truffle create migration <migration_name>` to create a new migration file.
+- Run `truffle create contract <contract_name>` to create a new contract file.
+- Run `truffle test` to run the tests.
