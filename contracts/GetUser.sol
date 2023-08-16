@@ -2,15 +2,13 @@
 pragma solidity >=0.4.22;
 
 contract GetUser {
-    address[16] public adopters;
+    address[16] public users;
 
     function getUsers() public view returns (address[16] memory) {
-        return adopters;
+        return users;
     }
 
-    function get(uint petId) public returns (uint) {
-        require(petId >= 0 && petId <= 15, "Invalid petId");
-        adopters[petId] = msg.sender;
-        return petId;
+    function getById(uint id) public view returns (address) {
+        return users[id];
     }
 }
