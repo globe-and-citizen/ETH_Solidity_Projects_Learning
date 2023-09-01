@@ -86,7 +86,7 @@ App = {
       var account = accounts[0];
       App.contracts.Adoption.deployed()
         .then(function (instance) {
-          return instance.adopt(petId, { from: account });
+          return instance.adopt.sendTransaction(petId, { from: account });
         })
         .then(function (result) {
           return App.markAdopted();
