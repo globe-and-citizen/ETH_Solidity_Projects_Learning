@@ -2,19 +2,19 @@ App = {
   web3Provider: null,
   contracts: {},
 
-  init: async function() {
+  init: async function () {
     // Load pets.
-    $.getJSON('../pets.json', function(data) {
-      var petsRow = $('#petsRow');
-      var petTemplate = $('#petTemplate');
+    $.getJSON("../pets.json", function (data) {
+      var petsRow = $("#petsRow");
+      var petTemplate = $("#petTemplate");
 
-      for (i = 0; i < data.length; i ++) {
-        petTemplate.find('.panel-title').text(data[i].name);
-        petTemplate.find('img').attr('src', data[i].picture);
-        petTemplate.find('.pet-breed').text(data[i].breed);
-        petTemplate.find('.pet-age').text(data[i].age);
-        petTemplate.find('.pet-location').text(data[i].location);
-        petTemplate.find('.btn-adopt').attr('data-id', data[i].id);
+      for (i = 0; i < data.length; i++) {
+        petTemplate.find(".panel-title").text(data[i].name);
+        petTemplate.find("img").attr("src", data[i].picture);
+        petTemplate.find(".pet-breed").text(data[i].breed);
+        petTemplate.find(".pet-age").text(data[i].age);
+        petTemplate.find(".pet-location").text(data[i].location);
+        petTemplate.find(".btn-adopt").attr("data-id", data[i].id);
 
         petsRow.append(petTemplate.html());
       }
@@ -23,46 +23,83 @@ App = {
     return await App.initWeb3();
   },
 
-  initWeb3: async function() {
-    /*
-     * Replace me...
-     */
-
+  // Initiate the Ethereum blockchain connection
+  initWeb3: async function () {
+    if (typeof web3 !== "undefined") {
+      App.web3Provider = web3.currentProvider;
+    } else {
+      // If no injected web3 instance is detected, fallback to the TestRPC
+      App.web3Provider = new Web3.providers.HttpProvider(
+        "http://localhost:7545"
+      );
+    }
+    web3 = new Web3(App.web3Provider);
     return App.initContract();
   },
 
-  initContract: function() {
-    /*
-     * Replace me...
-     */
-
+  // Initiate contract instance
+  initContract: function () {
+    $.getJSON("Adoption.json", function (data) {
+      // Get the necessary contract artifact file and instantiate it with truffle-contract
+      var AdoptionArtifact = data;
+      App.contracts.Adoption = TruffleContract(AdoptionArtifact);
+      // Set the provider for our contract
+      App.contracts.Adoption.setProvider(App.web3Provider);
+      // Use our contract to retrieve and mark the adopted pets
+      return App.markAdopted();
+    });
     return App.bindEvents();
   },
 
-  bindEvents: function() {
-    $(document).on('click', '.btn-adopt', App.handleAdopt);
+  bindEvents: function () {
+    $(document).on("click", ".btn-adopt", App.handleAdopt);
   },
 
-  markAdopted: function() {
-    /*
-     * Replace me...
-     */
+  markAdopted: function () {
+    App.contracts.Adoption.deployed()
+      .then(function (instance) {
+        return instance.getAdopters.call();
+      })
+      .then(function (adopters) {
+        for (i = 0; i < adopters.length; i++) {
+          if (!web3.toBigNumber(adopters[i]).isZero()) {
+            $(".panel-pet")
+              .eq(i)
+              .find("button")
+              .text("Success")
+              .attr("disabled", true);
+          }
+        }
+      })
+      .catch(function (err) {
+        console.log(err.message);
+      });
   },
 
-  handleAdopt: function(event) {
+  handleAdopt: function (event) {
     event.preventDefault();
-
-    var petId = parseInt($(event.target).data('id'));
-
-    /*
-     * Replace me...
-     */
-  }
-
+    var petId = parseInt($(event.target).data("id"));
+    web3.eth.getAccounts(function (error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+      var account = accounts[0];
+      App.contracts.Adoption.deployed()
+        .then(function (instance) {
+          return instance.adopt.sendTransaction(petId, { from: account });
+        })
+        .then(function (result) {
+          return App.markAdopted();
+        })
+        .catch(function (err) {
+          console.log(err.message);
+        });
+    });
+  },
 };
 
-$(function() {
-  $(window).load(function() {
+$(function () {
+  $(window).load(function () {
     App.init();
   });
 });

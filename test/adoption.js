@@ -27,5 +27,17 @@ contract("Adoption", function (accounts) {
         "Owner of pet id should be recorded in the array"
       );
     });
+    it("Should throw if invalid pet id is given", async () => {
+      try {
+        await instance.adopt.sendTransaction(17, { from: accounts[0] });
+        assert.fail(true, false, "This function should throw");
+      } catch (err) {
+        assert.include(
+          String(err),
+          "revert",
+          `Expected "revert" but instead got ${err}`
+        );
+      }
+    });
   });
 });
