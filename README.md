@@ -31,6 +31,12 @@ cd ETH_Solidity_Projects_Learning
 npm install
 ```
 
+- Compile & Deploy the smart contracts. (Make sure Ganache is running)
+
+```bash
+truffle deploy
+```
+
 - Run the app.
 
 ```bash
