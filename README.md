@@ -9,8 +9,8 @@ This is a simple DAPP to learn the basics of Ethereum DAPP development. The DAPP
 ### 1.2. Prerequisites (Technologies used)
 
 - [Node.js](https://nodejs.org/en/)
-- [Solidity](https://solidity.readthedocs.io/en/v0.7.4/)
-- [Truffle](https://www.trufflesuite.com/truffle)
+- [Solidity](https://solidity.readthedocs.io/en/v0.7.4/) <npm install -g solc>
+- [Truffle](https://www.trufflesuite.com/truffle) <npm install -g truffle>
 - [Ganache](https://www.trufflesuite.com/ganache)
 - [Metamask](https://metamask.io/)
 - [Web3.js](https://web3js.readthedocs.io/en/v1.3.0/)
